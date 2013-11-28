@@ -2,6 +2,8 @@ var assert = require('assert');
 var stream = require('stream');
 var util = require('util');
 var JSONStream = require('JSONStream');
+var NatStream = require('./streams/natural_numbers');
+var DblStream = require('./streams/double');
 
 function log (prefix) {
   return function (x) {
@@ -9,10 +11,8 @@ function log (prefix) {
   }
 }
 
-var Nat = require('./streams/natural_numbers');
-var Dbl = require('./streams/double');
-var nat = new Nat(log('NaturalNumbers'));
-var dbl = new Dbl(log('Double'));
+var nat = new NatStream(log('NaturalNumbers'));
+var dbl = new DblStream(log('Double'));
 
 nat
   .pipe(dbl)
