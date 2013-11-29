@@ -1,9 +1,8 @@
 var assert = require('assert');
 var stream = require('stream');
-var util = require('util');
-var JSONStream = require('JSONStream');
 var NatStream = require('./streams/natural_numbers');
 var DblStream = require('./streams/double');
+var JSONStream = require('JSONStream');
 
 function log (prefix) {
   return function (x) {
