@@ -1,0 +1,15 @@
+{
+  "name": "erdapfel",
+  "version": "0.0.1",
+  "description": "db-backed pomodoro cli",
+  "main": "app.js",
+  "keywords": [
+    "pomodoro",
+    "cli"
+  ],
+  "author": "fronx",
+  "license": "MIT",
+  "dependencies": {
+    "nedb": "~0.8.13"
+  }
+}
