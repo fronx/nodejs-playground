@@ -1,13 +1,13 @@
 var Erdapfel = require('./erdapfel');
-var Database = require('./db');
-var user = require('./user_io');
-var EventEmitter = require('events').EventEmitter;
-var time = require('./arith_time');
+var DbErdapfel = require('./db_erdapfel');
+var user = require('./lib/user_io');
+var time = require('./lib/arith_time');
 
 SECOND = 1000;
+DB_PATH = '.data';
 
 var Main = function () {
-  this.database = new Database();
+  this.database = new DbErdapfel(DB_PATH);
 }
 
 Main.prototype.end_erdapfel = function (erdapfel) {
@@ -29,12 +29,18 @@ Main.prototype.countdown = function (erdapfel) {
 
 Main.prototype.start_erdapfel = function (title) {
   var erdapfel = new Erdapfel(title);
-  this.database.store_erdapfel(erdapfel);
-  this.interval_handle = setInterval(this.countdown(erdapfel).bind(this), SECOND);
+  this.database.store(erdapfel);
+  this.interval_handle = setInterval(
+    this.countdown(erdapfel).bind(this),
+    SECOND
+  );
 };
 
 Main.prototype.run = function () {
-  user.ask("what are you going to do? > ", /.+/, this.start_erdapfel.bind(this));
+  user.ask(
+    "what are you going to do? > ",
+    /.+/,
+    this.start_erdapfel.bind(this));
 }
 
 new Main().run();

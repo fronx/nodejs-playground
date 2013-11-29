@@ -1,10 +1,7 @@
 var NeDB = require('nedb');
-var errors = require('./error_handlers');
+var errors = require('./lib/error_handlers');
 
-
-DEFAULT_PATH = './.data';
-
-var Database = function (path)
+var DbErdapfel = function (path, schema)
 {
   this.path = path || DEFAULT_PATH;
   this.nedb = new NeDB(
@@ -20,10 +17,16 @@ var Database = function (path)
   return this;
 }
 
-Database.prototype.store_erdapfel = function (erdapfel) {
+DbErdapfel.prototype.store = function (erdapfel) {
+  // if there is an active erdapfel, stop it
+  // create a new one
   this.nedb.insert(erdapfel.data, function (err, newDoc) {
     if (err) errors.log;
   });
 }
 
-module.exports = Database;
+DbErdapfel.prototype.active = function (now) {
+  now || Date.now()
+}
+
+module.exports = DbErdapfel;
