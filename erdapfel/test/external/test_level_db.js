@@ -1,21 +1,28 @@
 var assert = require('assert');
-TEST_DB_PATH = 'test.db';
 var levelup = require('levelup');
-var db = levelup(TEST_DB_PATH, { valueEncoding: 'json' });
 var test = require('../lib/test.js');
+var Promise = require('promise');
 
-[ function test_put_get () {
-    db.put('key', { a: 1, b: 2 });
-    db.get('key', test.callbacks([
-      function (err, value) {
-        assert.equal(null, err);
-      },
-      function (err, value) {
+test.with_temp_dir(function (tmp_dir) {
+  var db = levelup(tmp_dir, { valueEncoding: 'json' });
+  var db_put = Promise.denodeify(db.put.bind(db));
+  var db_get = Promise.denodeify(db.get.bind(db));
+
+  [
+    function test_put_get () {
+      var insertion = db_put('key', { a: 1, b: 2 });
+      var query = function () { return db_get('key'); }
+      var that = insertion.then(query);
+
+      function test_value (value) {
         assert.equal(
           JSON.stringify({ a: 1, b: 2 })
         , JSON.stringify(value)
         );
       }
-    ]));
-  }
-].forEach(test.run);
+
+      that.done(test_value);
+    }
+
+  ].forEach(test.run);
+});
