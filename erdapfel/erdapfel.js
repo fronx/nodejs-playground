@@ -13,6 +13,7 @@ var Erdapfel = function (title, duration, now)
 Erdapfel.prototype.start_time = function () { return this.data.start_time; };
 Erdapfel.prototype.title      = function () { return this.data.title; };
 Erdapfel.prototype.duration   = function () { return this.data.duration; };
+Erdapfel.prototype.data       = function () { return this.data; };
 Erdapfel.prototype.time_remaining = function (now) {
   var diff = this.duration() - ((now || Date.now()) - this.start_time());
   return diff < 0 ? 0 : diff;

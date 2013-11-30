@@ -1,28 +1,26 @@
-var NeDB = require('nedb');
+var levelup = require('levelup')
 var errors = require('./lib/error_handlers');
 
-var DbErdapfel = function (path, schema)
-{
+var DbErdapfel = function (path, schema) {
   this.path = path || DEFAULT_PATH;
-  this.nedb = new NeDB(
-    { filename: this.path
-    , autoload: true
-  });
-  this.nedb.ensureIndex(
-    { fieldName: 'start_time'
-    , unique: true
-    },
-    errors.log
-  );
-  return this;
+  this.db = levelup(path, { valueEncoding: 'json' })
+}
+
+DbErdapfel.prototype.key = function (erdapfel) {
+  return "erdapfel\x00" + erdapfel.start_time();
 }
 
 DbErdapfel.prototype.store = function (erdapfel) {
   // if there is an active erdapfel, stop it
   // create a new one
-  this.nedb.insert(erdapfel.data, function (err, newDoc) {
-    if (err) errors.log;
-  });
+  this.db.put(
+    this.key(erdapfel)
+  , erdapfel.data()
+  , function (err) {
+      if (err) return console.log(err);
+      // continue
+    }
+  );
 }
 
 DbErdapfel.prototype.active = function (now) {
