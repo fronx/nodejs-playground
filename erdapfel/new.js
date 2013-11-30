@@ -4,7 +4,7 @@ var user = require('./lib/user_io');
 var time = require('./lib/arith_time');
 
 SECOND = 1000;
-DB_PATH = '.data';
+DB_PATH = 'erdapfel.db';
 
 var Main = function () {
   this.database = new DbErdapfel(DB_PATH);

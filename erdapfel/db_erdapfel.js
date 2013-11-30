@@ -1,9 +1,11 @@
 var levelup = require('levelup')
 var errors = require('./lib/error_handlers');
+var Promise = require('promise');
+var level_promise = require('level-promise');
 
 var DbErdapfel = function (path, schema) {
-  this.path = path || DEFAULT_PATH;
-  this.db = levelup(path, { valueEncoding: 'json' })
+  this.db = levelup(path, { valueEncoding: 'json' });
+  level_promise(this.db);
 }
 
 DbErdapfel.prototype.key = function (erdapfel) {
@@ -12,19 +14,13 @@ DbErdapfel.prototype.key = function (erdapfel) {
 
 DbErdapfel.prototype.store = function (erdapfel) {
   // if there is an active erdapfel, stop it
+    // TODO
   // create a new one
-  this.db.put(
-    this.key(erdapfel)
-  , erdapfel.data()
-  , function (err) {
-      if (err) return console.log(err);
-      // continue
-    }
-  );
+  this.db.put(this.key(erdapfel), erdapfel.data());
 }
 
 DbErdapfel.prototype.active = function (now) {
-  now || Date.now()
+  // now || Date.now()
 }
 
 module.exports = DbErdapfel;
