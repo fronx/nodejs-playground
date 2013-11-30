@@ -10,9 +10,10 @@ test.with_temp_dir(function (tmp_dir) {
 
   [
     function test_put_get () {
-      var insertion = db_put('key', { a: 1, b: 2 });
-      var query = function () { return db_get('key'); }
-      var that = insertion.then(query);
+      var that =
+        db_put('key', { a: 1, b: 2 }).then(function () {
+          return db_get('key');
+        });
 
       function test_value (value) {
         assert.equal(
